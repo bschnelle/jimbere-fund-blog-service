@@ -1,0 +1,25 @@
+{
+  "name": "serverless-starter-kit",
+  "version": "0.1.0",
+  "description": "quick starter for Serverless framework",
+  "main": "handler.js",
+  "scripts": {
+    "test": "istanbul cover _mocha",
+    "test:dev": "mocha --watch"
+  },
+  "author": "Benjamin Schnelle <benjamin.schnelle@gmail.com> (https://github.com/bschnelle)",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "eslint": "^3.7.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.3.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.2",
+    "sinon": "^1.17.6",
+    "sinon-chai": "^2.8.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "extends" : "airbnb",
+  "env": {
+    "node": true,
+    "mocha": true // remove when eslint adds glob matching
+  },
+  "rules": {
+    "import/no-extraneous-dependencies": 0, // remove when eslint adds glob matching
+    "no-unused-expressions": 0, // remove when eslint adds glob matching
+  }
+}
