@@ -1,38 +1,70 @@
-/* const { expect } = require('chai');
+/* eslint-disable no-underscore-dangle */
+const { expect } = require('chai');
 const sinon = require('sinon');
 const create = require('./create');
 const esService = require('../services/elasticSearch').elasticSearchService;
 
 const event = { body: { author: 'Drake', title: 'Views' } };
-const response = { id: 'abc123' };
+const createRes = { _id: 'abc123' };
+const readRes = { _id: createRes._id, _source: event.body };
 
 describe('create()', () => {
   beforeEach(() => {
-    sinon.stub(esService, 'create').returns(Promise.resolve(response));
+    sinon.stub(esService, 'create').returns(Promise.resolve(createRes));
+    sinon.stub(esService, 'read').returns(Promise.resolve(readRes));
   });
 
-  afterEach(() => esService.create.restore());
+  afterEach(() => {
+    esService.create.restore();
+    esService.read.restore();
+  });
 
-  it('calls elasticSearchService.create with event.body', (done) => {
+  it('calls esService.create with event.body', (done) => {
     create(event, null, done);
     expect(esService.create).to.have.been.calledWith(event.body);
   });
 
   describe('on success', () => {
-    let callback;
-
-    beforeEach(() => {
-      callback = sinon.stub();
-    });
-
-    it('callback called with statusCode of 200 and body of stringified response', (done) => {
-      create(event, null, callback).then(() => {
-        const res = { statusCode: 200, body: JSON.stringify(response) };
-        expect(callback).to.have.been.calledWith(null, res);
+    it('calls esService.read with _id from esService.create result', (done) => {
+      create(event, null, sinon.stub()).then(() => {
+        expect(esService.read).to.have.been.calledWith(createRes._id);
         done();
       });
+    });
 
-      it('has a JSON API compliant body containing the new blog post document');
+    describe('calls callback with', () => {
+      let callback;
+      let error;
+      let response;
+
+      beforeEach(() => {
+        callback = (err, res) => {
+          error = err;
+          response = res;
+        };
+      });
+
+      it('error = null', (done) => {
+        create(event, null, callback).then(() => {
+          expect(error).to.be.null;
+          done();
+        });
+      });
+
+      it('response.statusCode = 200', (done) => {
+        create(event, null, callback).then(() => {
+          expect(response.statusCode).to.equal(200);
+          done();
+        });
+      });
+
+      it('response.body = JSON API compliant body containing new document', (done) => {
+        create(event, null, callback).then(() => {
+          const body = JSON.parse(response.body);
+          expect(body.data.id).to.equal(createRes._id);
+          done();
+        });
+      });
     });
   });
 
@@ -41,4 +73,3 @@ describe('create()', () => {
     it('if status is undefined, returns a 500');
   });
 });
-*/
