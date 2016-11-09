@@ -38,6 +38,10 @@ describe('[Service] ElasticSearch', () => {
     });
 
     describe('returns a response with props:', () => {
+      it('_id = "new id"', () => {
+        expect(response._id).to.be.truthy;
+      });
+
       it('_index = "blog"', () => {
         expect(response._index).to.equal('blog');
       });
